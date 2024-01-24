@@ -1,9 +1,10 @@
 import streamlit as st
 import openai
 import time
+import os
 
-# Set your OpenAI API key
-openai.api_key = "YOUR_API_KEY"
+# Retrieve OpenAI API key from environment variable
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 model = "gpt-3.5-turbo-1106"  # استخدم نموذج GPT-3.5 Turbo برقم الإصدار 1106
 
