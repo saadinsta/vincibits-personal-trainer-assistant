@@ -1,26 +1,50 @@
 import streamlit as st
 import openai
-import time
-import os
+from streamlit_chat import message
 
-# Retrieve OpenAI API key from environment variable
-openai.api_key = os.getenv("OPENAI_API_KEY")
+openai.api_key = "YOUR_API_KEY"
 
-model = "gpt-3.5-turbo-1106"  # استخدم نموذج GPT-3.5 Turbo برقم الإصدار 1106
+def api_calling(prompt):
+	completions = openai.Completion.create(
+		engine="text-davinci-003",
+		prompt=prompt,
+		max_tokens=1024,
+		n=1,
+		stop=None,
+		temperature=0.5,
+	)
+	message = completions.choices[0].text
+	return message
 
-# Create a user message
-user_input = st.text_input("Ask a question:")
-if st.button("Submit"):
-    st.write(f"User: {user_input}")
+st.title("ChatGPT ChatBot With Streamlit and OpenAI")
+if 'user_input' not in st.session_state:
+	st.session_state['user_input'] = []
 
-    # Send the user message directly to the model
-    response = openai.Completion.create(
-        engine=model,
-        prompt=f"User: {user_input}\nAssistant:",
-        temperature=0.7,
-        max_tokens=150,
-    )
+if 'openai_response' not in st.session_state:
+	st.session_state['openai_response'] = []
 
-    # Get the assistant's reply
-    assistant_reply = response['choices'][0]['text']
-    st.write(f"Assistant Response: {assistant_reply}")
+def get_text():
+	input_text = st.text_input("write here", key="input")
+	return input_text
+
+user_input = get_text()
+
+if user_input:
+	output = api_calling(user_input)
+	output = output.lstrip("\n")
+
+	# Store the output
+	st.session_state.openai_response.append(user_input)
+	st.session_state.user_input.append(output)
+
+message_history = st.empty()
+
+if st.session_state['user_input']:
+	for i in range(len(st.session_state['user_input']) - 1, -1, -1):
+		# This function displays user input
+		message(st.session_state["user_input"][i], 
+				key=str(i),avatar_style="icons")
+		# This function displays OpenAI response
+		message(st.session_state['openai_response'][i], 
+				avatar_style="miniavs",is_user=True,
+				key=str(i) + 'data_by_user')
