@@ -58,4 +58,9 @@ while not run["choices"][0]["message"]["content"]:
         st.stop()
 
 # عرض رد المساعد
-st.w
+st.write("Assistant Response:")
+st.write(run["choices"][0]["message"]["content"])
+
+# عرض الخطوات التي تم تسجيلها
+st.write("Steps--->")
+st.write(run)
