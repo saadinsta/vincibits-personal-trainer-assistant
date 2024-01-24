@@ -32,7 +32,7 @@ try:
         ],
     )
 except openai.error.OpenAIError as e:
-    st.error(f"An error occurred while creating the message: {e}")
+    st.exception(f"An error occurred while creating the message: {e}")
     st.stop()
 
 # إدارة الأخطاء أثناء تشغيل المساعد
@@ -45,7 +45,7 @@ try:
         ],
     )
 except openai.error.OpenAIError as e:
-    st.error(f"An error occurred while running the assistant: {e}")
+    st.exception(f"An error occurred while running the assistant: {e}")
     st.stop()
 
 # انتظار اكتمال التنفيذ
@@ -54,7 +54,7 @@ while not run["choices"][0]["message"]["content"]:
     try:
         run = client.ChatCompletion.retrieve(model="gpt-3.5-turbo-1106", run_id=run["id"])
     except openai.error.OpenAIError as e:
-        st.error(f"An error occurred while retrieving the run: {e}")
+        st.exception(f"An error occurred while retrieving the run: {e}")
         st.stop()
 
 # عرض رد المساعد
