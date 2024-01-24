@@ -64,4 +64,3 @@ st.write(run["choices"][0]["message"]["content"])
 # عرض الخطوات التي تم تسجيلها
 st.write("Steps--->")
 st.write(run)
-
