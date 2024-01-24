@@ -1,5 +1,18 @@
+import os
 import openai
 import streamlit as st
+
+# Retrieve OpenAI API key from environment variable
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+if OPENAI_API_KEY is None:
+    st.error("Please set the OPENAI_API_KEY environment variable.")
+    st.stop()
+
+# Set the API key in the environment
+os.environ["OPENAI_API_KEY"] = OPENAI_API_KEY
+
+# Create OpenAI client
+client = openai.OpenAI()
 
 # الهوية المعينة للمساعد (تم تحديثها إلى الهوية الجديدة)
 assistant_id = "asst_fIn3hgNSP1GjqQqp0sPAeMW4"
