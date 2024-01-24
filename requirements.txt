@@ -4,3 +4,4 @@ dotenv
 time
 logging
 streamlit
+streamlit_chat
