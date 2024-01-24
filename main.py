@@ -22,26 +22,40 @@ thread_id = "thread_58QhEBPsgcZIXPQZlZgnhjc5"
 
 # إنشاء رسالة جديدة
 user_input = st.text_input("User Input", "How many reps do I need to do to build lean muscles?")
-message = openai.ChatCompletion.create(
-    model="gpt-3.5-turbo-1106",  # تم تحديث الموديل
-    messages=[
-        {"role": "user", "content": user_input, "thread_id": thread_id},
-    ],
-)
 
-# تشغيل المساعد
-run = openai.ChatCompletion.create(
-    model="gpt-3.5-turbo-1106",  # تم تحديث الموديل
-    messages=[
-        {"role": "assistant", "content": "You are James Bond.", "thread_id": thread_id},
-        {"role": "user", "content": user_input, "thread_id": thread_id},
-    ],
-)
+# إدارة الأخطاء أثناء إنشاء الرسالة
+try:
+    message = client.ChatCompletion.create(
+        model="gpt-3.5-turbo-1106",
+        messages=[
+            {"role": "user", "content": user_input, "thread_id": thread_id},
+        ],
+    )
+except openai.error.OpenAIError as e:
+    st.error(f"An error occurred while creating the message: {e}")
+    st.stop()
+
+# إدارة الأخطاء أثناء تشغيل المساعد
+try:
+    run = client.ChatCompletion.create(
+        model="gpt-3.5-turbo-1106",
+        messages=[
+            {"role": "assistant", "content": "You are James Bond.", "thread_id": thread_id},
+            {"role": "user", "content": user_input, "thread_id": thread_id},
+        ],
+    )
+except openai.error.OpenAIError as e:
+    st.error(f"An error occurred while running the assistant: {e}")
+    st.stop()
 
 # انتظار اكتمال التنفيذ
 st.write("Waiting for run to complete...")
 while not run["choices"][0]["message"]["content"]:
-    run = openai.ChatCompletion.retrieve(model="gpt-3.5-turbo-1106", run_id=run["id"])
+    try:
+        run = client.ChatCompletion.retrieve(model="gpt-3.5-turbo-1106", run_id=run["id"])
+    except openai.error.OpenAIError as e:
+        st.error(f"An error occurred while retrieving the run: {e}")
+        st.stop()
 
 # عرض رد المساعد
 st.write("Assistant Response:")
