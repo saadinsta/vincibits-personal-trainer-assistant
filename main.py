@@ -17,8 +17,8 @@ client = openai.OpenAI()
 # الهوية المعينة للمساعد (تم تحديثها إلى الهوية الجديدة)
 assistant_id = "asst_fIn3hgNSP1GjqQqp0sPAeMW4"
 
-# الهوية المعينة للموضوع
-thread_id = "thread_58QhEBPsgcZIXPQZlZgnhjc5"
+# اختيار رقم الثريد
+thread_id = st.text_input("Enter Thread ID (default: thread_58QhEBPsgcZIXPQZlZgnhjc5)", "thread_58QhEBPsgcZIXPQZlZgnhjc5")
 
 # إنشاء رسالة جديدة
 user_input = st.text_input("User Input", "How many reps do I need to do to build lean muscles?")
